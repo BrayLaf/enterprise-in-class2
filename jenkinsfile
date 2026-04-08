@@ -1,0 +1,31 @@
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            agent{
+                docker{
+                    image 'node:24.14.0-alpine'
+                    reuseNode true
+                    args '--user root'
+                }
+            }
+            steps{
+                echo 'Building...'
+                sh 'npm install --no-bin-links'
+            }
+        }
+        stage('Test'){
+            agent{
+                docker{
+                    image 'node:24.14.0-alpine'
+                    reuseNode true
+                    args '--user root'
+                }
+            }
+            steps{
+                echo 'Testing...'
+                sh 'node node_modules/react-scripts/bin/react-scripts.js test --watchAll=false --passWithNoTests'
+            }
+        }
+    }
+}
